@@ -1,13 +1,20 @@
 ---
 - hosts: askvietnamese
+
+  vars:
+     server_name: test.askvietnamese.vn
+     app_dir: /opt/bitnami/apps/askvietnamese_ansible
+     project_root: /opt/bitnami/apps/askvietnamese_ansible/htdocs
+     
+
   sudo: yes
   tasks:
-   - name: create /opt/bitnami/apps/askvietnamese_ansible  directory
-     file: dest=/opt/bitnami/apps/askvietnamese_ansible state=directory
+   - name: create /opt/bitnami/apps/askvietnamese_ansible/conf directory 
+     file: dest="{{ app_dir }}/conf"   state=directory recurse=yes
 
    - name: Clone git repository
      git: 
-        dest=/opt/bitnami/apps/askvietnamese_ansible 
+        dest={{ project_root }}
         repo='https://github.com/GodStorm91/askvietnamese'
         update=no
 
@@ -17,5 +24,23 @@
    - name: composer install
      composer:
         command: install
-        working_dir: /opt/bitnami/apps/askvietnamese_ansible
+        working_dir: "{{ project_root }}"
      sudo: no
+
+   - name: config vhosts-app
+     become: true
+     template:
+        src: templates/askvietnamese-app.conf
+        dest: "{{ app_dir }}/conf/{{ server_name }}-app.conf"
+
+   - name: config vhosts
+     become: true 
+     template:
+        src: templates/askvietnamese-vhosts.conf
+        dest: "{{ app_dir }}/conf/{{ server_name }}-vhosts.conf"
+  
+   - name: config prefix
+     become: true
+     template:
+       src: templates/askvietnamese-prefix.conf
+       dest: "{{ app_dir }}/conf/{{ server_name }}-prefix.conf"
