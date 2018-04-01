@@ -1,0 +1,21 @@
+---
+- hosts: askvietnamese
+  sudo: yes
+  tasks:
+   - name: create /opt/bitnami/apps/askvietnamese_ansible  directory
+     file: dest=/opt/bitnami/apps/askvietnamese_ansible state=directory
+
+   - name: Clone git repository
+     git: 
+        dest=/opt/bitnami/apps/askvietnamese_ansible 
+        repo='https://github.com/GodStorm91/askvietnamese'
+        update=no
+
+   - name: Install composer
+     shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+   - name: composer install
+     composer:
+        command: install
+        working_dir: /opt/bitnami/apps/askvietnamese_ansible
+     sudo: no
