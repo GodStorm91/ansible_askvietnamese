@@ -5,7 +5,7 @@
      server_name: test.askvietnamese.vn
      app_dir: /opt/bitnami/apps/askvietnamese_ansible
      project_root: /opt/bitnami/apps/askvietnamese_ansible/htdocs
-     
+     bitnami_vhosts: /opt/bitnami/nginx/conf/bitnami/bitnami-apps-vhosts.conf
 
   sudo: yes
   tasks:
@@ -28,19 +28,38 @@
      sudo: no
 
    - name: config vhosts-app
+     tags:
+        - nginx
      become: true
      template:
         src: templates/askvietnamese-app.conf
         dest: "{{ app_dir }}/conf/{{ server_name }}-app.conf"
 
    - name: config vhosts
+     tags:
+        - nginx
      become: true 
      template:
         src: templates/askvietnamese-vhosts.conf
         dest: "{{ app_dir }}/conf/{{ server_name }}-vhosts.conf"
   
    - name: config prefix
+     tags:
+        - nginx
      become: true
      template:
        src: templates/askvietnamese-prefix.conf
        dest: "{{ app_dir }}/conf/{{ server_name }}-prefix.conf"
+  
+   - name: appends to vhosts
+     tags: 
+       - nginx 
+     lineinfile: 
+       path: /opt/bitnami/nginx/conf/bitnami/bitnami-apps-vhosts.conf
+       line: include "{{app_dir}}/conf/{{ server_name }}-vhosts.conf";
+
+   - name: restart nginx
+     tags:
+       - nginx
+     shell: /opt/bitnami/ctlscript.sh restart nginx
+     sudo: yes
