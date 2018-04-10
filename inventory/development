@@ -1,0 +1,15 @@
+# file: development
+
+[webservers]
+13.114.184.31 ansible_ssh_host=13.114.184.31 ansible_ssh_port=22 ansible_private_key_file=~/.ssh/id_mac ansible_ssh_user=bitnami ansible_python_interpreter=/usr/bin/python
+
+[mysqlservers]
+localhost ansible_ssh_host=localhost ansible_ssh_port=2200 ansible_ssh_user=vagrant
+
+[queueservers]
+localhost ansible_ssh_host=localhost ansible_ssh_port=2200 ansible_ssh_user=vagrant
+
+[elasticsearchservers]
+localhost ansible_ssh_host=localhost ansible_ssh_port=2200 ansible_ssh_user=vagrant
+
+

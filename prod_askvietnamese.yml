@@ -2,9 +2,9 @@
 - hosts: webservers
 
   vars:
-     server_name: test.askvietnamese.vn
-     app_dir: /opt/bitnami/apps/askvietnamese_ansible
-     project_root: /opt/bitnami/apps/askvietnamese_ansible/htdocs
+     server_name: askvietnamese.vn
+     app_dir: /opt/bitnami/apps/askvietnamese
+     project_root: /opt/bitnami/apps/askvietnamese/htdocs
      bitnami_vhosts: /opt/bitnami/nginx/conf/bitnami/bitnami-apps-vhosts.conf
 
   sudo: yes
@@ -63,9 +63,9 @@
        - nginx
      shell: /opt/bitnami/ctlscript.sh restart nginx
      sudo: yes
-
+   
    - name: update source to the newest
      tags:
       - git-pull
      shell: 'cd "{{ project_root }}" && git pull'
-
+     
