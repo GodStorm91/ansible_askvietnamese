@@ -67,5 +67,5 @@
    - name: update source to the newest
      tags:
       - git-pull
-     shell: 'cd "{{ project_root }}" && git pull'
+     shell: 'cd "{{ project_root }}" && git checkout {{ branch }} && git pull'
 
